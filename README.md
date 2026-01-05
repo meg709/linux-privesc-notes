@@ -11,3 +11,22 @@ echo "echo hello" > script.sh , attach text to script file and prints echo when 
 chmod +x script.sh , gives permission to execute
 The execute permission allows files to be run as programs. Writable and executable scripts owned by privileged users can lead to privilege escalation.
 
+Sudo -l ,list what i'm able to run with sudo
+What is sudo
+Sudo allows a user to execute commands as another user, usually root.
+
+How to enumerate
+
+sudo -l
+
+
+Why it is dangerous
+If a user is allowed to run powerful binaries (e.g. vim, python) with sudo, they can escape into a root shell.
+
+Impact
+Full system compromise.
+
+Mitigation
+Restrict sudo permissions. Avoid NOPASSWD for interactive binaries.
+
+That is a real security write‑up, not student fluff.
