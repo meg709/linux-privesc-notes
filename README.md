@@ -30,3 +30,55 @@ Mitigation
 Restrict sudo permissions. Avoid NOPASSWD for interactive binaries.
 
 That is a real security write‑up, not student fluff.
+
+
+DAY2
+2️⃣ How to find SUID files (this is muscle memory)
+Run:
+find / -perm -4000 -type f 2>/dev/null
+What this means:
+-4000 → SUID bit
+-type f → files only
+2>/dev/null → hide permission errors
+
+5️⃣ Example: SUID find
+
+If you see:
+/usr/bin/find
+Check GTFOBins → find → SUID
+Exploit:
+find . -exec /bin/bash -p \; -quit
+
+GTFOBins (this is your cheat code)
+GTFOBins =
+“If this binary runs as root, here’s how to abuse it”
+
+What to look out for when running this command /etc/cron*
+1.writable scirpts run by root
+2.scripts calling commands without full paths
+3.scripts in writeable directories
+1️⃣ YOUR output (GOOD configuration)
+From your crontab -l
+@reboot /bin/bash /root/Scripts/displayip.sh
+
+Why this is GOOD
+
+Let’s break it down piece by piece:
+
+Part	Why it’s safe
+/bin/bash	Absolute path → cannot hijack
+/root/Scripts/displayip.sh	Located in /root
+/root	Not writable by normal users
+Script owner	root
+Permissions	not world-writable
+4️⃣ BAD variation #3 – Script in writable directory
+GOOD (yours)
+/root/Scripts/displayip.sh
+
+BAD
+/tmp/displayip.sh
+
+
+Because /tmp is writable by everyone:
+
+echo "/bin/bash" > /tmp/displayip.sh
